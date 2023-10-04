@@ -1,0 +1,72 @@
+body {
+    background-image: url('/static/ml.jfif');
+    background-size: cover;
+    background-position: center;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.content-container {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    max-width: 500px; /* adjust width as per requirement */
+    width: 100%;
+}
+
+form {
+    width: 100%; /* make sure it takes full width of its parent */
+    margin-bottom: 20px;
+}
+
+textarea {
+    width: calc(100% - 20px); /* subtracting padding */
+    min-height: 100px;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+
+input[type=submit] {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%; /* make it full width on mobile */
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+.translation-container {
+    width: 100%; /* adjust for smaller screens */
+    max-width: 500px; /* adjust as per your design */
+    text-align: center;
+    font-size: 18px;
+    color: #555;
+}
+
+/* Responsive Styling */
+@media only screen and (min-width: 600px) {
+    input[type=submit] {
+        width: auto; /* back to auto for larger screens */
+    }
+}
+    

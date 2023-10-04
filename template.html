@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translation App</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="content-container">
+        <form method="post">
+            <textarea name="english_text" rows="5" cols="50" placeholder="Enter text here"></textarea>
+            <br>
+            <input type="submit" value="Translate">
+        </form>
+        <br>
+        <div class="translation-container">
+            Translation: <span>{{ translation }}</span>
+        </div>
+    </div>
+</body>
+</html>
