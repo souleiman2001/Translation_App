@@ -17,17 +17,17 @@ body {
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
-    max-width: 500px; /* adjust width as per requirement */
+    max-width: 500px;
     width: 100%;
 }
 
 form {
-    width: 100%; /* make sure it takes full width of its parent */
+    width: 100%;
     margin-bottom: 20px;
 }
 
 textarea {
-    width: calc(100% - 20px); /* subtracting padding */
+    width: calc(100% - 20px);
     min-height: 100px;
     margin-bottom: 10px;
     padding: 10px;
@@ -48,7 +48,7 @@ input[type=submit] {
     font-size: 16px;
     border-radius: 4px;
     cursor: pointer;
-    width: 100%; /* make it full width on mobile */
+    width: 100%;
 }
 
 input[type=submit]:hover {
@@ -56,17 +56,31 @@ input[type=submit]:hover {
 }
 
 .translation-container {
-    width: 100%; /* adjust for smaller screens */
-    max-width: 500px; /* adjust as per your design */
+    width: 100%;
+    max-width: 500px;
     text-align: center;
     font-size: 18px;
     color: #555;
 }
 
+/* Back Button Style */
+.back-button {
+    display: inline-block;
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.back-button:hover {
+    background-color: #45a049;
+}
+
 /* Responsive Styling */
 @media only screen and (min-width: 600px) {
     input[type=submit] {
-        width: auto; /* back to auto for larger screens */
+        width: auto;
     }
 }
-    
