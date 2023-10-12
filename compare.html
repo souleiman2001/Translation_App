@@ -9,17 +9,23 @@
 <body>
     <div class="comparison-container">
         <h1>Compare Translations</h1>
-        <form method="post" action="/compare_results">
+        <form method="post" action="/compare">
             <div class="text-areas">
-                <textarea name="main_text" placeholder="Enter Main Wikipedia Arabic Text"></textarea>
-                <textarea name="translated_text" placeholder="Enter Translated Arabic Text"></textarea>
+                <textarea name="main_text" placeholder="Enter Main Wikipedia Arabic Text">{{ reference_text }}</textarea>
+                <textarea name="translated_text" placeholder="Enter Translated Arabic Text">{{ translated_text }}</textarea>
             </div>
             <div class="buttons">
-                <button type="submit" name="comparison_type" value="metric1">Compare using Metric 1</button>
-                <button type="submit" name="comparison_type" value="metric2">Compare using Metric 2</button>
-                <button type="submit" name="comparison_type" value="metric3">Compare using Metric 3</button>
+                <button type="submit" name="comparison_type" value="bleu">Compare using BLEU Score</button>
+                <button type="submit" name="comparison_type" value="cosine">Compare using Cosine Similarity</button>
+                <button type="submit" name="comparison_type" value="levenshtein">Compare using Levenshtein Distance</button>
             </div>
         </form>
+        {% if score is not none %}
+            <div class="comparison-result">
+                <h2>Comparison Result:</h2>
+                <p>The comparison score is: {{ score }}</p>
+            </div>
+        {% endif %}
     </div>
 </body>
 </html>
