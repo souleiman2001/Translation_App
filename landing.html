@@ -10,7 +10,11 @@
     <div class="container">
         <h1>Welcome to the Translation App</h1>
         <p>Select an option below:</p>
-        <button onclick="location.href='{{ url_for('translate') }}'" type="button">Translate with MarianMT</button>
+        <button onclick="location.href='{{ url_for('translate') }}'" type="button">Translate with MarianMT (OPUS)</button>
+        <button onclick="location.href='{{ url_for('translate_finetuned') }}'" type="button">Translate with Fine-tuned MarianMT (120K Dataset)</button>
+        <button onclick="location.href='{{ url_for('gpt4_translation_interface') }}'" type="button">Translate with Google Translate</button>
+        <button onclick="location.href='{{ url_for('translate_marefa') }}'" type="button">Translate with Marefa</button>
+        <button onclick="location.href='{{ url_for('translate_turjuman') }}'" type="button">Translate with Turjuman</button>
         <button onclick="location.href='{{ url_for('compare') }}'" type="button">Compare Translations</button>
     </div>
 </body>
