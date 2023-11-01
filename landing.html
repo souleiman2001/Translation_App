@@ -1,21 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landing Page</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='landing_style.css') }}">
 </head>
+
 <body>
     <div class="container">
         <h1>Welcome to the Translation App</h1>
-        <p>Select an option below:</p>
-        <button onclick="location.href='{{ url_for('translate') }}'" type="button">Translate with MarianMT (OPUS)</button>
-        <button onclick="location.href='{{ url_for('translate_finetuned') }}'" type="button">Translate with Fine-tuned MarianMT (120K Dataset)</button>
-        <button onclick="location.href='{{ url_for('gpt4_translation_interface') }}'" type="button">Translate with Google Translate</button>
-        <button onclick="location.href='{{ url_for('translate_marefa') }}'" type="button">Translate with Marefa</button>
-        <button onclick="location.href='{{ url_for('translate_turjuman') }}'" type="button">Translate with Turjuman</button>
+        <p>Select a translation method:</p>
+
+        <select id="translationMethod">
+            <option value="{{ url_for('translate') }}">Translate with MarianMT (OPUS)</option>
+            <option value="{{ url_for('translate_finetuned') }}">Translate with Fine-tuned MarianMT (120K Dataset)</option>
+            <option value="{{ url_for('gpt4_translation_interface') }}">Translate with Google Translate</option>
+            <option value="{{ url_for('translate_marefa') }}">Translate with Marefa</option>
+            <option value="{{ url_for('translate_turjuman') }}">Translate with Turjuman</option>
+        </select>
+        <button onclick="redirectToTranslation()">Go</button>
+
+        <br><br>
         <button onclick="location.href='{{ url_for('compare') }}'" type="button">Compare Translations</button>
     </div>
+
+    <script>
+        function redirectToTranslation() {
+            const selectedMethod = document.getElementById("translationMethod").value;
+            window.location.href = selectedMethod;
+        }
+    </script>
 </body>
+
 </html>
