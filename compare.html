@@ -10,6 +10,9 @@
     <div class="comparison-container">
         <h1>Compare Translations</h1>
         <form method="post" action="/compare">
+            <!-- Hidden input for tool name -->
+            <input type="hidden" name="tool_name" value="{{ tool_name }}">
+
             <div class="text-areas">
                 <textarea name="main_text" placeholder="Enter Main Wikipedia Arabic Text">{{ reference_text }}</textarea>
                 <textarea name="translated_text" placeholder="Enter Translated Arabic Text">{{ translated_text }}</textarea>
