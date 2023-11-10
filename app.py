@@ -3,7 +3,7 @@ import re
 
 import nltk
 import requests
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from googletrans import Translator
 from nltk.translate.bleu_score import sentence_bleu
@@ -33,26 +33,29 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:slimanemultiverse
 translator = Translator()
 db = SQLAlchemy(app)
 
-class User(db.Model):
+class Score(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    bleu_score = db.Column(db.Float, nullable=True)
+    cosine_similarity = db.Column(db.Float, nullable=True)
+    lsa_score = db.Column(db.Float, nullable=True)
+    
+    
+    
 
 
-@app.route('/adduser', methods=['POST'])
-def add_user():
+@app.route('/addscore', methods=['POST'])
+def add_score():
     if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']  # Ideally, hash this before storing
-        
-        new_user = User(username=username, email=email, password=password)
-        db.session.add(new_user)
+        bleu_score = request.form.get('bleu_score')
+        cosine_similarity = request.form.get('cosine_similarity')
+        lsa_score = request.form.get('lsa_score')
+
+        new_score = Score(bleu_score=bleu_score, cosine_similarity=cosine_similarity, lsa_score=lsa_score)
+        db.session.add(new_score)
         db.session.commit()
 
-        return "User added successfully!"
-    return "Failed to add user."
+        return "Score added successfully!"
+    return "Failed to add score."
 
 
 
@@ -115,18 +118,12 @@ def compare_texts_using_lsa(wiki_arabic, translated_text, variance_threshold=0.9
     return lsa_cosine_sim[0][1]
 
 
-
-
-
-
-
-
-
-
 @app.route("/")
 def landing():
     return render_template("landing.html")
 
+
+""""
 @app.route("/translate", methods=["GET", "POST"])
 def translate():
     translation = ""
@@ -135,7 +132,28 @@ def translate():
         # Assume your translate_text function takes an English text and returns its Arabic translation
         translation = translate_text(english_text)
     return render_template("template.html", translation=translation)
+"""
 
+
+@app.route("/translate", methods=["GET", "POST"])
+def translate():
+    translation = ""
+    tool_name = "MarianMT"  # Define the tool name here for clarity and consistency
+    if request.method == "POST":
+        english_text = request.form.get("english_text", "")
+        translation = translate_text(english_text)
+        # Instead of rendering the template, redirect to the prepare_compare route
+        return redirect(url_for('prepare_compare', translation=translation, tool_name=tool_name))
+    return render_template("template.html", translation=translation)
+
+# New route to prepare for comparison
+@app.route("/prepare_compare")
+def prepare_compare():
+    # Retrieve the translation and tool name from the query parameters
+    translation = request.args.get('translation', '')
+    tool_name = request.args.get('tool_name', '')
+    # Render the compare.html template with the translated text and tool name
+    return render_template("compare.html", translated_text=translation, tool_name=tool_name)
 
 
 
@@ -157,12 +175,12 @@ def compare():
             score = compute_cosine_similarity(reference_text, translated_text)
             
         elif comparison_type == 'lsa':
-             score = compare_texts_using_lsa(reference_text, translated_text)
+            score = compare_texts_using_lsa(reference_text, translated_text)
     
     return render_template("compare.html", score=score, reference_text=reference_text, translated_text=translated_text)
 
 
-
+""""
 
 @app.route('/translate_gpt4', methods=['GET', 'POST'])
 def gpt4_translation_interface():
@@ -172,7 +190,19 @@ def gpt4_translation_interface():
         translation = translator.translate(english_text, dest='ar')
         return render_template('translate_gpt4.html', gpt4_translated_text=translation.text)
     return render_template('translate_gpt4.html', gpt4_translated_text="")
+"""
 
+@app.route('/translate_gpt4', methods=['GET', 'POST'])
+def gpt4_translation_interface():
+    tool_name = "Google Translate"  # Define the tool name as Google Translate
+    if request.method == 'POST':
+        english_text = request.form.get('english_text')
+        translation = translator.translate(english_text, dest='ar').text
+        # Redirect to the prepare_compare route with translation and tool_name
+        return redirect(url_for('prepare_compare', translation=translation, tool_name=tool_name))
+    return render_template('translate_gpt4.html', gpt4_translated_text="")
+
+""""
 @app.route("/translate_turjuman", methods=["GET", "POST"])
 def translate_turjuman():
     translation = ""
@@ -180,8 +210,33 @@ def translate_turjuman():
         english_text = request.form.get("english_text", "")
         translation = translate_text_turjuman(english_text)
     return render_template("translate_turjuman.html", translation=translation)
+"""
+
+@app.route("/translate_turjuman", methods=["GET", "POST"])
+def translate_turjuman():
+    translation = ""
+    tool_name = "Turjuman"  # Define the tool name for Turjuman
+    if request.method == "POST":
+        english_text = request.form.get("english_text", "")
+        translation = translate_text_turjuman(english_text)
+        # Redirect to the prepare_compare route with translation and tool_name
+        return redirect(url_for('prepare_compare', translation=translation, tool_name=tool_name))
+    return render_template("translate_turjuman.html", translation=translation)
 
 
+
+@app.route('/translate_marefa', methods=['GET', 'POST'])
+def translate_marefa():
+    translation = ""
+    tool_name = "Marefa"  # Define the tool name here
+    if request.method == 'POST':
+        english_text = request.form['english_text']
+        translation = translate_with_marefa(english_text)
+        # Redirect to the prepare_compare route with translation and tool_name
+        return redirect(url_for('prepare_compare', translation=translation, tool_name=tool_name))
+    return render_template('marefa.html', translation=translation)
+
+"""
 @app.route('/translate_marefa', methods=['GET', 'POST'])
 def translate_marefa():
     translation = ""
@@ -190,12 +245,25 @@ def translate_marefa():
         translation = translate_with_marefa(english_text)
     return render_template('marefa.html', translation=translation)
 
+
 @app.route("/translate_finetuned", methods=["GET", "POST"])
 def translate_finetuned():
     translation = ""
     if request.method == "POST":
         english_text = request.form.get("english_text", "")
         translation = translate_with_finetuned(english_text)
+    return render_template("fine_tuned_translation.html", translation=translation)
+"""
+
+@app.route("/translate_finetuned", methods=["GET", "POST"])
+def translate_finetuned():
+    translation = ""
+    tool_name = "Fine-tuned MarianMT"  # Define the tool name here
+    if request.method == "POST":
+        english_text = request.form.get("english_text", "")
+        translation = translate_with_finetuned(english_text)
+        # Redirect to the prepare_compare route with translation and tool_name
+        return redirect(url_for('prepare_compare', translation=translation, tool_name=tool_name))
     return render_template("fine_tuned_translation.html", translation=translation)
 
 
